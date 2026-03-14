@@ -177,6 +177,8 @@
   line-height: 28px;
   font-weight: 500;
   font-family: "Geist", sans-serif;
+  display: block;
+  width: 100%;
 }
 
 /* .landing-intro h1 span {
