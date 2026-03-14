@@ -6,9 +6,14 @@ const About = () => {
       <div className="about-me">
         <h3 className="title">About Me</h3>
         <p className="para">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic quis
-          dolores numquam iusto Ratione earum ducimus autem id iure pariatur
-          dolorum quae maiores.
+          I’m Samay, a freelance web developer who loves creating modern
+          websites and interactive web experiences. I specialize in building
+          responsive, fast, and visually engaging digital products using modern
+          web technologies.
+        </p>
+        <p className="para">
+          My goal is simple: convert creative ideas into real, functional
+          websites that deliver value and great user experiences.
         </p>
       </div>
     </div>
