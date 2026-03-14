@@ -26,13 +26,9 @@ const WhatIDo = () => {
   }, []);
   return (
     <div className="whatIDO">
-      <div className="what-box">
-        <h2 className="title">
-          WHAT
-          <div>
-            I<span className="do-h2"> DO</span>
-          </div>
-        </h2>
+      <div className="what-box what-title-box">
+        <h2 className="title title-line1">WHAT I</h2>
+        <h2 className="title title-line2 blue-text">DO</h2>
       </div>
       <div className="what-box">
         <div className="what-box-in">
