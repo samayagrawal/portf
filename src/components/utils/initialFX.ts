@@ -1,4 +1,4 @@
-import { SplitText } from "gsap-trial/SplitText";
+import { splitSelector } from "./splitText";
 import gsap from "gsap";
 import { smoother } from "../Navbar";
 
@@ -12,12 +12,9 @@ export function initialFX() {
     delay: 1,
   });
 
-  var landingText = new SplitText(
+  var landingText = splitSelector(
     [".landing-info h3", ".landing-intro h2", ".landing-intro h1"],
-    {
-      type: "chars,lines",
-      linesClass: "split-line",
-    }
+    "chars"
   );
   gsap.fromTo(
     landingText.chars,
@@ -33,9 +30,9 @@ export function initialFX() {
     }
   );
 
-  let TextProps = { type: "chars,lines", linesClass: "split-h2" };
+  let textProps = { type: "chars" as const };
 
-  var landingText2 = new SplitText(".landing-h2-info", TextProps);
+  var landingText2 = splitSelector(".landing-h2-info", textProps.type);
   gsap.fromTo(
     landingText2.chars,
     { opacity: 0, y: 80, filter: "blur(5px)" },
@@ -72,21 +69,21 @@ export function initialFX() {
     }
   );
 
-  var landingText3 = new SplitText(".landing-h2-info-1", TextProps);
-  var landingText4 = new SplitText(".landing-h2-1", TextProps);
-  var landingText5 = new SplitText(".landing-h2-2", TextProps);
+  var landingText3 = splitSelector(".landing-h2-info-1", textProps.type);
+  var landingText4 = splitSelector(".landing-h2-1", textProps.type);
+  var landingText5 = splitSelector(".landing-h2-2", textProps.type);
 
-  LoopText(landingText2, landingText3);
-  LoopText(landingText4, landingText5);
+  LoopText(landingText2.chars, landingText3.chars);
+  LoopText(landingText4.chars, landingText5.chars);
 }
 
-function LoopText(Text1: SplitText, Text2: SplitText) {
+function LoopText(chars1: HTMLElement[], chars2: HTMLElement[]) {
   var tl = gsap.timeline({ repeat: -1, repeatDelay: 1 });
   const delay = 4;
   const delay2 = delay * 2 + 1;
 
   tl.fromTo(
-    Text2.chars,
+    chars2,
     { opacity: 0, y: 80 },
     {
       opacity: 1,
@@ -99,7 +96,7 @@ function LoopText(Text1: SplitText, Text2: SplitText) {
     0
   )
     .fromTo(
-      Text1.chars,
+      chars1,
       { y: 80 },
       {
         duration: 1.2,
@@ -111,7 +108,7 @@ function LoopText(Text1: SplitText, Text2: SplitText) {
       1
     )
     .fromTo(
-      Text1.chars,
+      chars1,
       { y: 0 },
       {
         y: -80,
@@ -123,7 +120,7 @@ function LoopText(Text1: SplitText, Text2: SplitText) {
       0
     )
     .to(
-      Text2.chars,
+      chars2,
       {
         y: -80,
         duration: 1.2,

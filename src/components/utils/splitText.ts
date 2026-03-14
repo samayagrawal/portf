@@ -1,14 +1,85 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollSmoother } from "gsap-trial/ScrollSmoother";
-import { SplitText } from "gsap-trial/SplitText";
+
+gsap.registerPlugin(ScrollTrigger);
+
+// ---------------------------------------------------------------------------
+// Custom SplitText replacement (free, no GSAP Club needed)
+// Splits an element's text into individual <span> elements per word or char.
+// ---------------------------------------------------------------------------
+interface SplitResult {
+  words: HTMLElement[];
+  chars: HTMLElement[];
+  revert: () => void;
+}
+
+function customSplit(
+  el: HTMLElement,
+  type: "words" | "chars" | "both" = "both"
+): SplitResult {
+  const original = el.innerHTML;
+  const text = el.textContent || "";
+  const words: HTMLElement[] = [];
+  const chars: HTMLElement[] = [];
+
+  // Split into word spans, then char spans within each word
+  const wordTokens = text.split(/(\s+)/);
+  el.innerHTML = "";
+  wordTokens.forEach((token) => {
+    if (/^\s+$/.test(token)) {
+      el.appendChild(document.createTextNode(token));
+      return;
+    }
+    const wordSpan = document.createElement("span");
+    wordSpan.style.display = "inline-block";
+    wordSpan.style.overflow = "hidden";
+    if (type === "words" || type === "both") words.push(wordSpan);
+    [...token].forEach((char) => {
+      const charSpan = document.createElement("span");
+      charSpan.style.display = "inline-block";
+      charSpan.textContent = char;
+      wordSpan.appendChild(charSpan);
+      if (type === "chars" || type === "both") chars.push(charSpan);
+    });
+    el.appendChild(wordSpan);
+  });
+
+  return {
+    words,
+    chars,
+    revert: () => {
+      el.innerHTML = original;
+    },
+  };
+}
+
+function splitSelector(
+  selector: string | string[],
+  type: "words" | "chars" | "both" = "both"
+): SplitResult {
+  const selectors = Array.isArray(selector) ? selector : [selector];
+  const allWords: HTMLElement[] = [];
+  const allChars: HTMLElement[] = [];
+  const revertFns: (() => void)[] = [];
+
+  selectors.forEach((sel) => {
+    document.querySelectorAll<HTMLElement>(sel).forEach((el) => {
+      const result = customSplit(el, type);
+      allWords.push(...result.words);
+      allChars.push(...result.chars);
+      revertFns.push(result.revert);
+    });
+  });
+
+  return { words: allWords, chars: allChars, revert: () => revertFns.forEach((fn) => fn()) };
+}
+
+// ---------------------------------------------------------------------------
 
 interface ParaElement extends HTMLElement {
   anim?: gsap.core.Animation;
-  split?: SplitText;
+  split?: SplitResult;
 }
-
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
 export default function setSplitText() {
   ScrollTrigger.config({ ignoreMobileResize: true });
@@ -26,10 +97,7 @@ export default function setSplitText() {
       para.split?.revert();
     }
 
-    para.split = new SplitText(para, {
-      type: "lines,words",
-      linesClass: "split-line",
-    });
+    para.split = customSplit(para, "words");
 
     para.anim = gsap.fromTo(
       para.split.words,
@@ -48,15 +116,13 @@ export default function setSplitText() {
       }
     );
   });
+
   titles.forEach((title: ParaElement) => {
     if (title.anim) {
       title.anim.progress(1).kill();
       title.split?.revert();
     }
-    title.split = new SplitText(title, {
-      type: "chars,lines",
-      linesClass: "split-line",
-    });
+    title.split = customSplit(title, "chars");
     title.anim = gsap.fromTo(
       title.split.chars,
       { autoAlpha: 0, y: 80, rotate: 10 },
@@ -78,3 +144,6 @@ export default function setSplitText() {
 
   ScrollTrigger.addEventListener("refresh", () => setSplitText());
 }
+
+export { splitSelector, customSplit };
+export type { SplitResult };
