@@ -8,9 +8,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Stub smoother object so initialFX.ts doesn't break
 export const smoother = {
-  paused: (_v: boolean) => {},
-  scrollTop: (_v: number) => {},
-  scrollTo: (_target: string | Element | null, _smooth?: boolean, _position?: string) => {},
+  paused: (_v: boolean) => { },
+  scrollTop: (_v: number) => { },
+  scrollTo: (_target: string | Element | null, _smooth?: boolean, _position?: string) => { },
 };
 
 const Navbar = () => {
@@ -34,14 +34,14 @@ const Navbar = () => {
     <>
       <div className="header">
         <a href="/#" className="navbar-title" data-cursor="disable">
-          Logo
+          Samay Codes
         </a>
         <a
-          href="mailto:example@mail.com"
+          href="mailto:samayagrawal.dev@gmail.com"
           className="navbar-connect"
           data-cursor="disable"
         >
-          example@mail.com
+          samayagrawal.dev@gmail.com
         </a>
         <ul>
           <li>
