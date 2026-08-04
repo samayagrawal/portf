@@ -34,7 +34,7 @@ const Navbar = () => {
     <>
       <div className="header">
         <a href="/#" className="navbar-title" data-cursor="disable">
-          Digital Cartographer
+          Samay Agrawal
         </a>
         <a
           href="mailto:samayagrawal.dev@gmail.com"
